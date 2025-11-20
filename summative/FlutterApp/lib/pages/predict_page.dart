@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-
+import 'services/api_service.dart'; 
 class PredictPage extends StatefulWidget {
   const PredictPage({super.key});
 
@@ -36,38 +34,6 @@ class _PredictPageState extends State<PredictPage> {
   };
 
   String? result;
-
-  Future<void> predict() async {
-    const apiUrl = "http://192.168.1.72:8000/predict";
-
-    final data = {
-      for (var entry in controllers.entries)
-        entry.key: double.tryParse(entry.value.text) ?? 0
-    };
-
-    try {
-      final response = await http.post(
-        Uri.parse(apiUrl),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode(data),
-      );
-
-      if (response.statusCode == 200) {
-        final body = jsonDecode(response.body);
-        setState(() {
-          result = "Predicted Yield: ${body["Predicted_Yield"]}";
-        });
-      } else {
-        setState(() {
-          result = "Server error: ${response.statusCode}";
-        });
-      }
-    } catch (e) {
-      setState(() {
-        result = "Failed to connect to server";
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +75,26 @@ class _PredictPageState extends State<PredictPage> {
                       const SizedBox(height: 20),
 
                       ElevatedButton(
-                        onPressed: predict,
+                        onPressed: () async {
+                          final data = {
+                            for (var entry in controllers.entries)
+                              entry.key:
+                                  double.tryParse(entry.value.text) ?? 0
+                          };
+
+                          try {
+                            final resultValue =
+                                await ApiService.predict(data);
+
+                            setState(() {
+                              result = "Predicted Yield: $resultValue";
+                            });
+                          } catch (e) {
+                            setState(() {
+                              result = "Error: $e";
+                            });
+                          }
+                        },
                         child: const Text("Predict"),
                       ),
 
