@@ -1,11 +1,25 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
+# prediction.py
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel, Field
+from fastapi.middleware.cors import CORSMiddleware
 import numpy as np
 import joblib
+import os
 
-app = FastAPI()
+app = FastAPI(title="Crop Yield Predictor")
 
-model = joblib.load("best_model.pkl")
+# --- CORS (allow from anywhere for now; tighten in production if needed) ---
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Load model
+MODEL_PATH = os.path.join(os.path.dirname(__file__), "best_model.pkl")
+model = joblib.load(MODEL_PATH)
 
 EXPECTED_FEATURES = [
     "Rainfall_mm",
@@ -30,41 +44,41 @@ EXPECTED_FEATURES = [
     "Weather_Condition_Sunny"
 ]
 
+# --- Pydantic model with constraints (adjust ranges if needed) ---
 class CropInput(BaseModel):
-    Rainfall_mm: float = 0
-    Temperature_Celsius: float = 0
-    Fertilizer_Used: float = 0
-    Irrigation_Used: float = 0
-    Days_to_Harvest: float = 0
-    Region_North: int = 0
-    Region_South: int = 0
-    Region_West: int = 0
-    Soil_Type_Clay: int = 0
-    Soil_Type_Loam: int = 0
-    Soil_Type_Peaty: int = 0
-    Soil_Type_Sandy: int = 0
-    Soil_Type_Silt: int = 0
-    Crop_Cotton: int = 0
-    Crop_Maize: int = 0
-    Crop_Rice: int = 0
-    Crop_Soybean: int = 0
-    Crop_Wheat: int = 0
-    Weather_Condition_Rainy: int = 0
-    Weather_Condition_Sunny: int = 0
-
+    Rainfall_mm: float = Field(..., ge=0, le=500)              # mm
+    Temperature_Celsius: float = Field(..., ge=-10, le=60)     # °C
+    Fertilizer_Used: float = Field(..., ge=0, le=10000)       # unit depends on dataset
+    Irrigation_Used: int = Field(..., ge=0, le=1)             # 0/1 indicator
+    Days_to_Harvest: float = Field(..., ge=1, le=365)
+    Region_North: int = Field(..., ge=0, le=1)
+    Region_South: int = Field(..., ge=0, le=1)
+    Region_West: int = Field(..., ge=0, le=1)
+    Soil_Type_Clay: int = Field(..., ge=0, le=1)
+    Soil_Type_Loam: int = Field(..., ge=0, le=1)
+    Soil_Type_Peaty: int = Field(..., ge=0, le=1)
+    Soil_Type_Sandy: int = Field(..., ge=0, le=1)
+    Soil_Type_Silt: int = Field(..., ge=0, le=1)
+    Crop_Cotton: int = Field(..., ge=0, le=1)
+    Crop_Maize: int = Field(..., ge=0, le=1)
+    Crop_Rice: int = Field(..., ge=0, le=1)
+    Crop_Soybean: int = Field(..., ge=0, le=1)
+    Crop_Wheat: int = Field(..., ge=0, le=1)
+    Weather_Condition_Rainy: int = Field(..., ge=0, le=1)
+    Weather_Condition_Sunny: int = Field(..., ge=0, le=1)
 
 @app.post("/predict")
 def predict_crop(data: CropInput):
-
-    # Convert to dictionary
+    # Convert to dictionary (pydantic v2)
     data_dict = data.model_dump()
 
-    # Create feature list
+    # Create feature list in expected order
     filtered = [data_dict.get(f, 0) for f in EXPECTED_FEATURES]
-
     feature_array = np.array([filtered])
 
-    prediction = model.predict(feature_array)[0]
+    try:
+        prediction = model.predict(feature_array)[0]
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
     return {"Predicted_Yield": float(prediction)}
-
