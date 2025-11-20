@@ -40,3 +40,6 @@ flutter run
 * Tap Predict Yield.
 * The app sends a POST request to the Render API.
 * Predicted yield displays instantly.
+
+## project stucture and deployment explanation
+**The root folder is used ONLY for deployment on Railway**, while the actual project files are stored inside the summative/ directory.
