@@ -82,3 +82,10 @@ def predict_crop(data: CropInput):
         raise HTTPException(status_code=500, detail=str(e))
 
     return {"Predicted_Yield": float(prediction)}
+
+@app.get("/")
+def home():
+    return {
+        "message": "Crop Yield Prediction API is running.",
+        "docs_url": "https://linear-regression-model-4dyx.onrender.com/docs"
+    }
