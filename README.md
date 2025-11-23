@@ -4,8 +4,9 @@
 My project **predicts crop yield based on environmental and agricultural inputs.** It solves the **problem of unpredictable harvests** by **using machine learning to deliver accurate yield forecasts.** The system includes a trained regression model, a FastAPI prediction endpoint, and a Flutter mobile app. The **goal is to support data‑driven farming and improve decision‑making.**
 
 ## Public API Endpoint (FastAPI-Deployed on Render)
-**Base URL:** [https://your-api.onrender.com](https://your-api.onrender.com)
-**Swagger UI:**
+**Base URL:** [https://linear-regression-model-4dyx.onrender.com](https://linear-regression-model-4dyx.onrender.com)
+**Swagger UI:** [https://linear-regression-model-4dyx.onrender.com/docs](https://linear-regression-model-4dyx.onrender.com/docs)
+
 The endpoint accepts crop/environment parameters and returns:
 ```bash
 {
@@ -13,7 +14,7 @@ The endpoint accepts crop/environment parameters and returns:
 }
 ```
 ## Demo video
-Youtube video: 
+Youtube video: [https://youtu.be/276-aBRP6yE](https://youtu.be/276-aBRP6yE) 
 
 ## Mobile App (Flutter)-How to run
 1. Clone the repository
