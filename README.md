@@ -5,7 +5,9 @@ My project **predicts crop yield based on environmental and agricultural inputs.
 
 ## Public API Endpoint (FastAPI-Deployed on Render)
 **Base URL:** [https://linear-regression-model-4dyx.onrender.com](https://linear-regression-model-4dyx.onrender.com)
+
 **Swagger UI:** [https://linear-regression-model-4dyx.onrender.com/docs](https://linear-regression-model-4dyx.onrender.com/docs)
+
 **Prediction endpoint** [https://linear-regression-model-4dyx.onrender.com/predict](https://linear-regression-model-4dyx.onrender.com/predict)
 
 
