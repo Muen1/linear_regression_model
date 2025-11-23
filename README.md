@@ -6,6 +6,8 @@ My project **predicts crop yield based on environmental and agricultural inputs.
 ## Public API Endpoint (FastAPI-Deployed on Render)
 **Base URL:** [https://linear-regression-model-4dyx.onrender.com](https://linear-regression-model-4dyx.onrender.com)
 **Swagger UI:** [https://linear-regression-model-4dyx.onrender.com/docs](https://linear-regression-model-4dyx.onrender.com/docs)
+**Prediction endpoint** [https://linear-regression-model-4dyx.onrender.com/predict](https://linear-regression-model-4dyx.onrender.com/predict)
+
 
 The endpoint accepts crop/environment parameters and returns:
 ```bash
@@ -16,13 +18,14 @@ The endpoint accepts crop/environment parameters and returns:
 ## Demo video
 Youtube video: [https://youtu.be/276-aBRP6yE](https://youtu.be/276-aBRP6yE) 
 
-## Mobile App (Flutter)-How to run
+## How to run the mobile app
 1. Clone the repository
 ```bash
 git clone https://github.com/Muen1/linear_regression_model.git
 ```
-2. Install Dependencies
-```
+2. Get Dependencies
+Run inside the /summative/FlutterApp folder:
+```bash
 flutter pub get
 ```
 3. Set the API endpoint
@@ -41,3 +44,38 @@ flutter run
 * Tap Predict Yield.
 * The app sends a POST request to the Render API.
 * Predicted yield displays instantly.
+
+## How to run the API locally
+1. Create a virtual environment
+```bash
+python -m venv venv
+source venv/bin/activate   # macOS/Linux
+venv\Scripts\activate      # Windows
+```
+2. Start the FastAPI server 
+Inside /summative/API
+```bash
+python -m uvicorn prediction:app --host 0.0.0.0 --port 8000 --reload
+```
+3. open swagger UI
+```arduino
+https://linear-regression-model-4dyx.onrender.com/docs
+```
+
+## requirements.txt
+```nginx
+fastapi
+uvicorn
+scikit-learn
+pydantic
+numpy
+joblib
+pandas
+python-multipart
+```
+
+## Models Used
+The notebook trains 3 models:
+* Linear regression
+* Decision tree regressor
+* Random forest regressor 
