@@ -31,7 +31,7 @@ Run inside the /summative/FlutterApp folder:
 flutter pub get
 ```
 3. Set the API endpoint
-Edit the *lib/api-constants.dart*
+Edit the *lib/core/constants/api-constants.dart*
 ```bash
 class ApiConstants {
 static const String PREDICT_URL = "https://YOUR_PUBLIC_API_URL.onrender.com/predict";
